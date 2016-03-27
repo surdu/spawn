@@ -8,7 +8,9 @@ const argv = require('minimist')(process.argv.slice(2));
 const recursive = require('recursive-readdir');
 const rimraf = require('rimraf');
 const fs = require('fs');
+const path = require('path');
 const escape_re = require('escape-string-regexp');
+const mkdirp = require('mkdirp');
 
 var term;
 var config;
@@ -62,12 +64,17 @@ function parseFile(content, context) {
 	var startPattern = escape_re("{[");
 	var endPattern = escape_re("]}");
 	var tmplPattern = new RegExp(`${startPattern}(.*?)${endPattern}`, "g");
+	var result = content;
 
-	var match = tmplPattern.exec(content);
+	var match = tmplPattern.exec(result);
 	while (match != null) {
-		console.log("Found:", match[0]);
-		match = tmplPattern.exec(content);
+		let varName = match[1];
+		// console.log("Found:", match[0], "->", context[varName]);
+		result = result.replace(match[0], context[varName]);
+		match = tmplPattern.exec(result);
 	}
+
+	return result;
 }
 
 // If the repo was not specified as argument,
@@ -79,8 +86,10 @@ if (argv._.length === 0) {
 
 const repo = argv._[0];
 
+console.log("Cloning ...");
 Git.Clone(`https://github.com/${repo}`, ".drop")
 .then(function () {
+	console.log("Parsing config ...");
 	// Read config from repo
 	return new Promise(function (resolve, reject) {
 			fs.readFile(".drop/drop.json", "utf-8", function (err, file) {
@@ -120,12 +129,13 @@ Git.Clone(`https://github.com/${repo}`, ".drop")
 				context[key] = answer;
 			}
 
-			console.log("Finished all question:", context);
+			// console.log("Finished all question:", context);
 			resolve(context);
 		});
 	});
 })
 .then(function (context) {
+	console.log("Writing result...");
 	return new Promise(function (resolve, reject) {
 
 		recursive('.drop', [".drop/.git/**"], function (err, files) {
@@ -133,12 +143,19 @@ Git.Clone(`https://github.com/${repo}`, ".drop")
 				reject("Failed to read local clone:", err);
 			}
 
-			// for (let f = 0; f < files.length; f++) {
-				var filename = ".drop/package.json"; //files[f];
-				var fileContent = fs.readFileSync(filename, "utf-8");
-				var solvedFile = parseFile(fileContent, context);
-				console.log("Solved:", solvedFile);
-			// }
+			for (let f = 0; f < files.length; f++) {
+				var sourceFilename = files[f];
+				var destFilename = sourceFilename.replace(".drop/", "");
+
+				var destDir = path.dirname(destFilename);
+				if (destDir) {
+					mkdirp.sync(destDir);
+				}
+
+				var fileContent = fs.readFileSync(sourceFilename, "utf-8");
+				var solvedContent = parseFile(fileContent, context);
+				fs.writeFileSync(destFilename, solvedContent);
+			}
 
 			resolve();
 		});
