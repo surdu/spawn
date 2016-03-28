@@ -15,7 +15,7 @@ const mkdirp = require('mkdirp');
 var config;
 
 // Ask a question on the terminal and return
-// a promise that will resolve with the answer givven
+// a promise that will resolve with the answer given
 function ask(question, def) {
 	var term = readline.createInterface({
 		input: process.stdin,
@@ -24,8 +24,12 @@ function ask(question, def) {
 
 	def = def || "";
 
+	if (def) {
+		def = ` (${def})`
+	}
+
 	return new Promise(function (resolve) {
-		term.question(`${question}: (${def}) `, function (answer) {
+		term.question(`${question}:${def} `, function (answer) {
 			resolve(answer || def);
 			term.close();
 		});
@@ -86,9 +90,12 @@ if (argv._.length === 0) {
 const repo = argv._[0];
 
 console.log("Cloning ...");
+
+// Make sure the .spawn folder does not exist in the current folder,
+rimraf.sync(".spawn");
+
 Git.Clone(`https://github.com/${repo}`, ".spawn")
 .then(function () {
-	console.log("Parsing config ...");
 	// Read config from repo
 	return new Promise(function (resolve, reject) {
 			fs.readFile(".spawn/spawn.json", "utf-8", function (err, file) {
@@ -134,7 +141,7 @@ Git.Clone(`https://github.com/${repo}`, ".spawn")
 	});
 })
 .then(function (context) {
-	console.log("Writing result...");
+	console.log("Spawning ...");
 	return new Promise(function (resolve, reject) {
 
 		recursive('.spawn', [".spawn/.git/**"], function (err, files) {
@@ -161,9 +168,10 @@ Git.Clone(`https://github.com/${repo}`, ".spawn")
 	});
 })
 .then(function () {
-	rimraf(".spawn", function () {
-		console.log("Done");
-	});
+	// Cleanup
+	rimraf.sync(".spawn");
+	fs.unlinkSync("spawn.json");
+	console.log("Done");
 })
 .catch(function (err) {
 	console.error("Encountered errors:");
