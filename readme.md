@@ -15,7 +15,7 @@ In order to use Spawn you'll need [Node](https://nodejs.org) and npm, which usua
 After installing Node and npm, just run the following command:
 
 ```
-npm install spawn -g
+npm install spawn-cli -g
 ```
 
 On Unix machines, depending on your system configuration, you might need to run the above command using `sudo`.
