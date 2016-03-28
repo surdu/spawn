@@ -26,12 +26,12 @@ I've setup a repo to help you see Spawn in action and how easy is to set-up a te
 
 You can see that there is a config file named `spawn.json` that contains one key `values` and it's value is an object of which the keys are the variable names and the values are the default for the variable names.
 
-Now let's spawn an instance of `hello-sapwn` on your machine.
+Now let's spawn an instance of `hello-spawn` on your machine.
 
-Go inside an empty folder on your disk and type the follwong command:
+Go inside an empty folder on your disk and type the following command:
 
 ```
-spawn surdu/hello-sapwn
+spawn surdu/hello-spawn
 ```
 
 You'll notice that spawn will start asking you your name and the version, as specified in the config.
