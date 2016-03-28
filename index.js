@@ -12,13 +12,12 @@ const path = require('path');
 const escape_re = require('escape-string-regexp');
 const mkdirp = require('mkdirp');
 
-var term;
 var config;
 
 // Ask a question on the terminal and return
 // a promise that will resolve with the answer givven
 function ask(question, def) {
-	term = readline.createInterface({
+	var term = readline.createInterface({
 		input: process.stdin,
 		output: process.stdout
 	});
@@ -26,7 +25,7 @@ function ask(question, def) {
 	def = def || "";
 
 	return new Promise(function (resolve) {
-		term.question(`${question}: (${def})`, function (answer) {
+		term.question(`${question}: (${def}) `, function (answer) {
 			resolve(answer || def);
 			term.close();
 		});
@@ -80,21 +79,21 @@ function parseFile(content, context) {
 // If the repo was not specified as argument,
 // show the usage message and exit
 if (argv._.length === 0) {
-	console.log("Usage: drop <github-user>/<github-repo>");
+	console.log("Usage: spawn <github-user>/<github-repo>");
 	process.exit(64);
 }
 
 const repo = argv._[0];
 
 console.log("Cloning ...");
-Git.Clone(`https://github.com/${repo}`, ".drop")
+Git.Clone(`https://github.com/${repo}`, ".spawn")
 .then(function () {
 	console.log("Parsing config ...");
 	// Read config from repo
 	return new Promise(function (resolve, reject) {
-			fs.readFile(".drop/drop.json", "utf-8", function (err, file) {
+			fs.readFile(".spawn/spawn.json", "utf-8", function (err, file) {
 				if (err) {
-					reject("Could not read the config file 'drop.json' from repo:", err);
+					reject("Could not read the config file 'spawn.json' from repo:", err);
 					return;
 				}
 
@@ -102,7 +101,7 @@ Git.Clone(`https://github.com/${repo}`, ".drop")
 					 config = JSON.parse(file);
 				}
 				catch(ex) {
-					reject("Invalid JSON in drop.json file");
+					reject("Invalid JSON in spawn.json file");
 					return;
 				}
 
@@ -138,14 +137,14 @@ Git.Clone(`https://github.com/${repo}`, ".drop")
 	console.log("Writing result...");
 	return new Promise(function (resolve, reject) {
 
-		recursive('.drop', [".drop/.git/**"], function (err, files) {
+		recursive('.spawn', [".spawn/.git/**"], function (err, files) {
 			if (err) {
 				reject("Failed to read local clone:", err);
 			}
 
 			for (let f = 0; f < files.length; f++) {
 				var sourceFilename = files[f];
-				var destFilename = sourceFilename.replace(".drop/", "");
+				var destFilename = sourceFilename.replace(".spawn/", "");
 
 				var destDir = path.dirname(destFilename);
 				if (destDir) {
@@ -162,7 +161,7 @@ Git.Clone(`https://github.com/${repo}`, ".drop")
 	});
 })
 .then(function () {
-	rimraf(".drop", function () {
+	rimraf(".spawn", function () {
 		console.log("Done");
 	});
 })
