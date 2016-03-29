@@ -6,13 +6,13 @@ The majority of project templates just need files copied from a template folder 
 
 Enter Spawn: put a template folder on GitHub (for now), add a config file to that folder enumerating the variables to replace throughout the folder and you're set.
 
-Every time you'll need a new project based on that template, just call `spawn <GitHubUser>/<GitHubRepo>`. Spawn will prompts you to enter values for template variables defined in the config and you're good to go.
+Every time you'll need a new project based on that template, just call `spawn <GitHubUser>/<GitHubRepo>`. Spawn will prompt you to enter values for template variables defined in the config and you're good to go.
 
 # Installation
 
-In order to use Spawn you'll need [Node](https://nodejs.org) and npm, which usually comes bundled with Node.
+In order to use Spawn you'll need [Node](https://nodejs.org) and npm, which usually comes bundled.
 
-After installing Node and npm, just run the following command:
+After installing Node and npm, just run the following command to install Spawn:
 
 ```
 npm install spawn-cli -g
@@ -34,7 +34,7 @@ Go inside an empty folder on your disk and type the following command:
 spawn surdu/hello-spawn
 ```
 
-You'll notice that spawn will start asking you your name and the version, as specified in the config.
+You'll notice that spawn will start asking for your name and the version, as specified in the config.
 
 After you provide all this info, you'll have a fresh copy of the `hello-spawn` project spawned in your current folder.
 
