@@ -1,7 +1,11 @@
 {
   "name": "spawn-cli",
-  "version": "0.1.0",
-  "description": "",
+  "version": "0.1.1",
+  "description": "Basic tool that helps you start your projects easily using simple templates",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/surdu/spawn.git"
+  },
   "scripts": {},
   "bin": {
     "spawn": "./index.js"
@@ -12,6 +16,7 @@
     "escape-string-regexp": "^1.0.5",
     "minimist": "^1.2.0",
     "mkdirp": "^0.5.1",
+    "nodegit": "^0.12.0",
     "recursive-readdir": "^1.3.0",
     "rimraf": "^2.5.2"
   }
