@@ -2,7 +2,7 @@
 
 Spawn is a basic tool that helps you start your projects easily using simple templates.
 
-Majority of project templates just need files copied from a template folder and replace placeholders inside files throughout that folder with certain project specific value (e.g: project name, project version, etc).
+The majority of project templates just need files copied from a template folder and replace placeholders inside files throughout that folder with certain project specific value (e.g: project name, project version, etc).
 
 Enter Spawn: put a template folder on GitHub (for now), add a config file to that folder enumerating the variables to replace throughout the folder and you're set.
 
