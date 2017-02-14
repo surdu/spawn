@@ -38,4 +38,4 @@ You'll notice that spawn will start asking for your name and the version, as spe
 
 After you provide all this info, you'll have a fresh copy of the `hello-spawn` project spawned in your current folder.
 
-This is pretty much alt there is to it, for now at least.
+This is pretty much all there is to it, for now at least.
